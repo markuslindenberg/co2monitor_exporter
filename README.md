@@ -25,3 +25,7 @@ go get github.com/markuslindenberg/co2monitor_exporter
 ```bash
 ~/go/bin/co2monitor_exporter --device /dev/hidraw0
 ```
+
+## Package
+
+This repository includes a [Go package for the USB CO2 monitor](https://godoc.org/github.com/markuslindenberg/co2monitor_exporter/co2monitor).
