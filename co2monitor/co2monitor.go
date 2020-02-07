@@ -1,5 +1,3 @@
-package co2monitor
-
 /*
 Package co2monitor implements a client for USB CO2 monitors
 like the CO2Mini / AIRCO2NTROL MINI / AIRCO2NTROL COACH.
@@ -9,6 +7,7 @@ It uses the Linux HIDRAW API to communicate to the USB device.
 This is an implementation of the reverse engineering documented at
 https://hackaday.io/project/5301-reverse-engineering-a-low-cost-usb-co-monitor
 */
+package co2monitor
 
 import (
 	"fmt"
