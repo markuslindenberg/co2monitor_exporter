@@ -1,0 +1,7 @@
+[Unit]
+Description=co2monitor_exporter
+
+[Service]
+ExecStart=/usr/local/bin/co2monitor_exporter --device /dev/%I
+Restart=always
+RestartSec=2

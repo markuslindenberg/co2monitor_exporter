@@ -20,6 +20,14 @@ It uses the Linux HIDRAW API (`/dev/hidraw0` etc.) to access the CO2 Monitor.
 go get github.com/markuslindenberg/co2monitor_exporter
 ```
 
+A example udev rule and systemd service to automatically start co3monitor_exporter when the device is plugged in are provided in the `systemd/` directory.
+
+```bash
+sudo cp systemd/prometheus-co2monitor-exporter@.service /etc/systemd/system/
+sudo cp systemd/90-co2monitor.rules /etc/udev/rules.d/
+sudo systemctl restart udev.service
+```
+
 ## Usage
 
 ```bash
