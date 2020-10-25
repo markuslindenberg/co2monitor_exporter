@@ -53,7 +53,7 @@ func Open(name string) (c Conn, err error) {
 	for i, v := range key {
 		setReport[i+1] = v
 	}
-	hidiocsfeature9 := 0xC0094806
+	const hidiocsfeature9 = 0xC0094806
 	_, _, ep := syscall.Syscall(syscall.SYS_IOCTL, device.Fd(), uintptr(hidiocsfeature9), uintptr(unsafe.Pointer(setReport)))
 	if ep != 0 {
 		device.Close()
