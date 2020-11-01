@@ -76,10 +76,12 @@ func (c *conn) Read() (operation rune, value int, err error) {
 		return
 	}
 
-	data := decrypt(buffer)
-	if data[4] != 0x0d || ((data[0]+data[1]+data[2])&0xff) != data[3] {
-		err = fmt.Errorf("checksum error: % x", data)
-		return
+	data := buffer
+	if !check(data) {
+		data = decrypt(data)
+		if !check(data) {
+			err = fmt.Errorf("checksum error: %x", data)
+		}
 	}
 
 	operation = rune(data[0])
@@ -96,6 +98,11 @@ func TempToCelsius(value int) (temperature float64) {
 // HumidityToRH converts a humidity value returned by Read() to %RH
 func HumidityToRH(value int) (humidity float64) {
 	return float64(value) / 100.0
+}
+
+func check(data []byte) bool {
+	return (data[0]+data[1]+data[2])&0xff == data[3] &&
+		data[4] == 0x0d && data[5] == 0x00 && data[6] == 0x00 && data[7] == 0x00
 }
 
 func decrypt(data []byte) []byte {
