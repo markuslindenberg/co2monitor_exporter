@@ -43,7 +43,7 @@ type conn struct {
 
 // Open opens a USB connection to the CO2 monitor using the provided hidraw device (e.g. /dev/hidraw1)
 func Open(name string) (c Conn, err error) {
-	device, err := os.OpenFile(name, os.O_APPEND|os.O_RDWR, 0)
+	device, err := os.OpenFile(name, os.O_APPEND|os.O_RDWR|syscall.O_NONBLOCK, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,15 @@ func Open(name string) (c Conn, err error) {
 		setReport[i+1] = v
 	}
 	const hidiocsfeature9 = 0xC0094806
-	_, _, ep := syscall.Syscall(syscall.SYS_IOCTL, device.Fd(), uintptr(hidiocsfeature9), uintptr(unsafe.Pointer(setReport)))
+
+	rawConn, err := device.SyscallConn()
+	if err != nil {
+		panic(err)
+	}
+	var ep syscall.Errno
+	rawConn.Control(func(fd uintptr) {
+		_, _, ep = syscall.Syscall(syscall.SYS_IOCTL, fd, uintptr(hidiocsfeature9), uintptr(unsafe.Pointer(setReport)))
+	})
 	if ep != 0 {
 		device.Close()
 		return nil, syscall.Errno(ep)
